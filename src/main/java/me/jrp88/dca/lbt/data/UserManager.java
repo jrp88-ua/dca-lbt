@@ -100,7 +100,15 @@ public class UserManager {
     public Optional<User> loggedUser() {
         if (loggedUser == null)
             return Optional.empty();
-        return Optional.ofNullable(users.get(loggedUser));
+        return user(loggedUser);
+    }
+
+    public Optional<User> user(String userName) {
+        return Optional.ofNullable(users.get(userName));
+    }
+
+    public String displayName(String userName) {
+        return user(userName).map(User::displayName).orElse("Unknown");
     }
 
     public void writeOut(DataOutputStream out) throws IOException {

@@ -6,8 +6,6 @@ import me.jrp88.dca.lbt.util.IOUtil;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -69,7 +67,7 @@ public class IssueManager {
         Issue issue = issue(id).orElseThrow();
         issue.comments().stream()
                 .sorted(IssueComment::compareTo)
-                .map(IssueComment::show)
+                .map(ic -> ic.show(lbt().userManager()))
                 .forEach(System.out::println);
     }
 
@@ -167,7 +165,7 @@ public class IssueManager {
         Arrays.stream(issues)
                 .sorted()
                 .mapToObj(this::issue)
-                .map(o -> o.map(Issue::resume))
+                .map(o -> o.map(i -> i.resume(lbt().userManager())))
                 .map(o -> o.orElse("Unknown issue"))
                 .forEach(System.out::println);
     }
@@ -234,6 +232,10 @@ public class IssueManager {
                 .add("issues=" + issues)
                 .add("nextId=" + nextId)
                 .toString();
+    }
+
+    public LBT lbt() {
+        return lbt;
     }
 
     void addIssue(Issue issue) {

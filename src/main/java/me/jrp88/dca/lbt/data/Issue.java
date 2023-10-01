@@ -1,6 +1,5 @@
 package me.jrp88.dca.lbt.data;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class Issue {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public enum State {
-        OPEN, CLOSED;
+        OPEN, CLOSED
 
     }
 
@@ -45,11 +44,12 @@ public class Issue {
         setState(state() == State.OPEN ? State.CLOSED : State.OPEN);
     }
 
-    public String resume() {
+    public String resume(UserManager userManager) {
         return """
                 #%d: %s (%s)
-                \s\sReported by @%s at %s
-                \s\s%s""".formatted(id, title, state.name(), reporterName,
+                \s\sReported by %s (%s) at %s
+                \s\s%s""".formatted(id, title, state.name(),
+                userManager.displayName(reporterName), reporterName,
                 DATE_TIME_FORMATTER.format(creationTime), String.join(", ", tags));
     }
 

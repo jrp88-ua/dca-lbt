@@ -243,8 +243,7 @@ public class LBT implements Runnable {
                     if (! Files.exists(path))
                         Files.createFile(path);
                     try (var out = new DataOutputStream(Files.newOutputStream(path))) {
-                        userManager.writeOut(out);
-                        issueManager.writeOut(out);
+                        writeTo(out);
                     }
                 } catch (IOException e) {
                     System.out.println("-- Could not save app state: " + e.getMessage());
@@ -279,11 +278,20 @@ public class LBT implements Runnable {
 
     void loadFrom(Path path) {
         try (var in = new DataInputStream(Files.newInputStream(path))) {
-            userManager.readIn(in);
-            issueManager.readIn(in);
+            readIn(in);
         } catch (IOException e) {
             System.out.println("-- Could not load app state: " + e.getMessage());
         }
+    }
+
+    public void writeTo(DataOutputStream out) throws IOException {
+        userManager.writeOut(out);
+        issueManager.writeOut(out);
+    }
+
+    public void readIn(DataInputStream in) throws IOException {
+        userManager.readIn(in);
+        issueManager.readIn(in);
     }
 
     public IssueManager issueManager() {

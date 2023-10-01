@@ -66,6 +66,29 @@ public class TestLoadSave {
         baos.close();
     }
 
+    @Test
+    public void allReadAfterWriteGeneratesTheSame() throws IOException {
+        LBT original = new LBT();
+        addUsers(original);
+        addIssues(original);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(baos);
+        original.writeTo(out);
+
+        byte[] serialized = baos.toByteArray();
+
+        LBT deserialized = new LBT();
+        ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
+        DataInputStream in = new DataInputStream(bais);
+        deserialized.readIn(in);
+
+        Assertions.assertEquals(original.issueManager(), deserialized.issueManager());
+
+        bais.close();
+        baos.close();
+    }
+
     private void addUsers(LBT lbt) {
         lbt.userManager().addUser(new User("Ally", "Allyta", true));
         lbt.userManager().addUser(new User("Juan", "JuanElLoko", false));

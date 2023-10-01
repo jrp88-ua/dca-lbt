@@ -18,11 +18,12 @@ public class IssueComment implements Comparable<IssueComment> {
         this.content = content;
     }
 
-    public String show() {
+    public String show(UserManager userManager) {
         return """
-                %s commented at %s:
+                %s (%s) commented at %s:
                   %s
-                """.formatted(authorName, DATE_TIME_FORMATTER.format(creationTime), content);
+                """.formatted(userManager.displayName(authorName), authorName,
+                DATE_TIME_FORMATTER.format(creationTime), content);
     }
 
     @Override
